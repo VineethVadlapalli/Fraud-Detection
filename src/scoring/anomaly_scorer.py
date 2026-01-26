@@ -10,9 +10,9 @@ class AnomalyScorer:
     
     def __init__(
         self, 
-        high_threshold: float = 0.98,
-        medium_threshold: float = 0.90,
-        low_threshold: float = 0.75
+        high_threshold: float = 0.80,
+        medium_threshold: float = 0.60,
+        low_threshold: float = 0.40
     ):
         self.high_threshold = high_threshold
         self.medium_threshold = medium_threshold
@@ -92,11 +92,20 @@ class AnomalyScorer:
         if 'is_night' in transaction_features and \
            transaction_features['is_night'] == 1:
             contributors.append("Transaction during unusual hours")
+
+        # Add amount check
+        if 'amount' in transaction_features:
+            amount = transaction_features['amount']
+            if amount > 10000:
+                contributors.append(f"Critical high-value transaction (${amount:,.2f})")
+            elif amount > 1000:
+                contributors.append(f"High-value transaction (${amount:,.2f})")
         
         # Add high deviation scores
         if 'amount_dev_from_user_mean' in transaction_features:
             dev = abs(transaction_features['amount_dev_from_user_mean'])
             if dev > 3:
                 contributors.append(f"Amount deviates {dev:.1f}σ from user average")
+        
         
         return contributors[:top_n] if contributors else ["No specific factors identified"]

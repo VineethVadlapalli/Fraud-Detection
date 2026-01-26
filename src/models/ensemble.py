@@ -225,22 +225,34 @@ class EnsembleAnomalyDetector:
         joblib.dump(model_data, save_path)
         print(f"Model saved to {save_path}")
     
+    # @classmethod
+    # def load(cls, path: str):
+    #     """Load ensemble model from disk"""
+    #     import joblib
+    #     model_data = joblib.load(path)
+        
+    #     detector = cls(
+    #         contamination=model_data['contamination'],
+    #         voting=model_data['voting']
+    #     )
+        
+    #     detector.models = model_data['models']
+    #     detector.weights = model_data['weights']
+    #     detector.scaler = model_data['scaler']
+    #     detector.fitted = model_data['fitted']
+        
+    #     print(f"Model loaded from {path}")
+    #     return detector
+
     @classmethod
     def load(cls, path: str):
-        """Load ensemble model from disk"""
-        model_data = joblib.load(path)
+        """Load ensemble model from disk using joblib"""
+        import joblib
+        # Since we saved the whole object, joblib.load returns the 
+        # already-constructed EnsembleAnomalyDetector instance.
+        detector = joblib.load(path)
         
-        detector = cls(
-            contamination=model_data['contamination'],
-            voting=model_data['voting']
-        )
-        
-        detector.models = model_data['models']
-        detector.weights = model_data['weights']
-        detector.scaler = model_data['scaler']
-        detector.fitted = model_data['fitted']
-        
-        print(f"Model loaded from {path}")
+        print(f"Model loaded successfully from {path}")
         return detector
 
 

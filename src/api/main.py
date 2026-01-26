@@ -5,11 +5,15 @@ Provides REST API for real-time fraud detection
 from fastapi import FastAPI, HTTPException, Depends, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 import pandas as pd
 import numpy as np
 from datetime import datetime
 import uvicorn
+
+import sys
+import os
+sys.path.append(os.getcwd())
 
 from config.settings import get_settings
 from src.models.ensemble import EnsembleAnomalyDetector
@@ -91,7 +95,7 @@ class BatchDetectionRequest(BaseModel):
 class BatchDetectionResponse(BaseModel):
     """Batch detection response"""
     results: List[DetectionResult]
-    summary: Dict[str, any]
+    summary: Dict[str, Any]
 
 
 class HealthCheck(BaseModel):

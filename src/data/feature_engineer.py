@@ -149,27 +149,70 @@ class FeatureEngineer:
         
         return df
     
+    # def _add_velocity_features(self, df: pd.DataFrame) -> pd.DataFrame:
+    #     """Transaction velocity features"""
+    #     df = df.sort_values(['user_id', 'timestamp']).reset_index(drop=True)
+        
+    #     # Time since last transaction (in seconds)
+    #     df['time_since_last_txn'] = df.groupby('user_id')['timestamp'].diff().dt.total_seconds()
+    #     df['time_since_last_txn'] = df['time_since_last_txn'].fillna(86400)  # 24 hours default
+        
+    #     # Transactions in last 1 hour, 6 hours, 24 hours
+    #     for hours in [1, 6, 24]:
+    #         df[f'txn_count_{hours}h'] = df.groupby('user_id')['timestamp'].transform(
+    #             lambda x: x.rolling(f'{hours}H', on=df.loc[x.index, 'timestamp']).count()
+    #         )
+        
+    #     # Amount velocity (total spent in time windows)
+    #     # for hours in [1, 6, 24]:
+    #     #     df[f'amount_sum_{hours}h'] = df.groupby('user_id')['amount'].transform(
+    #     #         lambda x: x.rolling(window=hours).sum()
+    #     #     )
+
+    #     for hours in [1, 6, 24]:
+    #         df[f'amount_sum_{hours}h'] = df.groupby('user_id')['amount'].rolling(window=f'{hours}h').count().reset_index(level=0, drop=True)    
+            
+        
+    #     # Fill NaN values
+    #     velocity_cols = [c for c in df.columns if 'txn_count' in c or 'amount_sum' in c]
+    #     df[velocity_cols] = df[velocity_cols].fillna(0)
+        
+    #     return df
+    
     def _add_velocity_features(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Transaction velocity features"""
+        """Transaction velocity features - Refactored for Pandas 2.0 compatibility"""
+        # 1. Ensure sorted by user and time
         df = df.sort_values(['user_id', 'timestamp']).reset_index(drop=True)
         
-        # Time since last transaction (in seconds)
+        # 2. Time since last transaction (in seconds)
         df['time_since_last_txn'] = df.groupby('user_id')['timestamp'].diff().dt.total_seconds()
         df['time_since_last_txn'] = df['time_since_last_txn'].fillna(86400)  # 24 hours default
         
-        # Transactions in last 1 hour, 6 hours, 24 hours
+        # 3. Time-based Rolling Windows (Velocity)
+        # We use a temporary index to perform the time-rolling calculation correctly
+        df = df.set_index('timestamp')
+        
         for hours in [1, 6, 24]:
-            df[f'txn_count_{hours}h'] = df.groupby('user_id')['timestamp'].transform(
-                lambda x: x.rolling(f'{hours}H', on=df.loc[x.index, 'timestamp']).count()
+            # Transaction Count Velocity
+            df[f'txn_count_{hours}h'] = (
+                df.groupby('user_id')['amount']
+                .rolling(window=f'{hours}H')
+                .count()
+                .reset_index(level=0, drop=True)
+            )
+            
+            # Amount Sum Velocity
+            df[f'amount_sum_{hours}h'] = (
+                df.groupby('user_id')['amount']
+                .rolling(window=f'{hours}H')
+                .sum()
+                .reset_index(level=0, drop=True)
             )
         
-        # Amount velocity (total spent in time windows)
-        for hours in [1, 6, 24]:
-            df[f'amount_sum_{hours}h'] = df.groupby('user_id')['amount'].transform(
-                lambda x: x.rolling(window=hours).sum()
-            )
+        # 4. Reset index to bring timestamp back as a column
+        df = df.reset_index()
         
-        # Fill NaN values
+        # 5. Fill NaN values
         velocity_cols = [c for c in df.columns if 'txn_count' in c or 'amount_sum' in c]
         df[velocity_cols] = df[velocity_cols].fillna(0)
         

@@ -219,10 +219,13 @@ def save_models(models: dict, save_dir: Path):
     """Save trained models"""
     print("\nSaving models...")
     save_dir.mkdir(parents=True, exist_ok=True)
-    
+
+    import joblib
+
     for name, model in models.items():
         save_path = save_dir / f"{name}.joblib"
-        model.save(str(save_path))
+        # model.save(str(save_path))
+        joblib.dump(model, str(save_path))
         print(f"Saved {name} to {save_path}")
 
 
