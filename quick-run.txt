@@ -1,0 +1,28 @@
+🚀 Quick Start (10 Minutes to Running System)
+
+# 1. Clone repository (create your private repo first)
+git clone <your-private-repo-url>
+cd anomaly-detection-system
+
+# 2. Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Set up environment
+cp .env.example .env
+# Edit .env with your settings
+
+# 5. Generate synthetic data
+python scripts/generate_data.py
+
+# 6. Train models
+python scripts/train_models.py
+
+# 7. Start API
+python src/api/main.py
+
+# 8. Test API (in new terminal)
+curl http://localhost:8000/health
