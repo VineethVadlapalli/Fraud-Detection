@@ -1,4 +1,6 @@
+####################################################################################
 🚀 Quick Start (10 Minutes to Running System)
+####################################################################################
 
 # 1. Clone repository (create your private repo first)
 git clone <your-private-repo-url>
@@ -26,3 +28,113 @@ python src/api/main.py
 
 # 8. Test API (in new terminal)
 curl http://localhost:8000/health
+
+####################################################################################
+🧪 Testing Guide
+####################################################################################
+
+Run All Tests
+bash# Install test dependencies
+pip install pytest pytest-cov pytest-asyncio httpx
+
+# Run tests with coverage
+pytest tests/ -v --cov=src --cov-report=html
+
+# View coverage report
+open htmlcov/index.html
+Test Individual Components
+bash# Test feature engineering
+pytest tests/test_features.py -v
+
+# Test models
+pytest tests/test_models.py -v
+
+# Test API
+pytest tests/test_api.py -v
+Manual API Testing
+bash# Health check
+curl http://localhost:8000/health
+
+# Single transaction detection
+curl -X POST http://localhost:8000/detect \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_id": "txn_test",
+    "user_id": "user_001",
+    "merchant_id": "merchant_001",
+    "amount": 5000.00,
+    "timestamp": "2024-01-26T14:30:00",
+    "location_lat": 40.7128,
+    "location_lon": -74.0060
+  }'
+
+# Batch detection
+curl -X POST http://localhost:8000/detect/batch \
+  -H "Content-Type: application/json" \
+  -d @sample_batch.json
+
+####################################################################################
+📊 Monitoring Dashboard
+####################################################################################
+
+Monitoring Dashboard
+Start Streamlit Dashboard
+bashstreamlit run dashboards/streamlit_app.py
+Access at: http://localhost:8501
+Dashboard Features
+
+Real-time metrics (detection rate, FPR, throughput)
+Alert management interface
+Model performance visualization
+Drift detection alerts
+Transaction analysis
+
+####################################################################################
+🚢 Deployment Guide
+####################################################################################
+
+Local Deployment
+bash# Using Python directly
+python src/api/main.py
+
+# Using Gunicorn (production)
+gunicorn src.api.main:app \
+  --workers 4 \
+  --worker-class uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:8000
+Docker Deployment
+bash# Build image
+docker build -t anomaly-detector .
+
+# Run container
+docker run -p 8000:8000 anomaly-detector
+
+# Or use docker-compose
+docker-compose up -d
+Cloud Deployment (AWS Example)
+1. Set up EC2 Instance
+bash# SSH into instance
+ssh -i key.pem ubuntu@<instance-ip>
+
+# Install Docker
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+
+# Clone repository
+git clone <your-repo>
+cd anomaly-detection-system
+
+# Start with Docker Compose
+sudo docker-compose up -d
+2. Set up RDS Database
+
+Create PostgreSQL RDS instance
+Update DATABASE_URL in .env
+Run migrations
+
+3. Configure Load Balancer
+
+Create Application Load Balancer
+Point to EC2 instances
+Configure health checks
+

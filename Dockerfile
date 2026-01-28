@@ -28,7 +28,7 @@ WORKDIR /app
 # Install system dependencies (needed for some ML libraries)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    python3.10-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install dependencies (Cached layer)

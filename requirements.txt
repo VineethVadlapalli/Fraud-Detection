@@ -6,7 +6,7 @@ scipy==1.11.1
 
 # Anomaly Detection Libraries
 pyod==1.1.0
-hdbscan==0.8.33
+# hdbscan==0.8.33
 
 # Machine Learning
 xgboost==1.7.6
