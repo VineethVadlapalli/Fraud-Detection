@@ -10,13 +10,13 @@ pyod==1.1.0
 
 # Machine Learning
 xgboost==1.7.6
-lightgbm==4.0.0
-catboost==1.2
+# lightgbm==4.0.0
+# catboost==1.2
 
 # Deep Learning
-tensorflow==2.15.0
-keras==2.15.0
-torch==2.0.1
+# tensorflow==2.15.0
+# keras==2.15.0
+# torch==2.0.1
 
 # Time Series
 statsmodels==0.14.0
