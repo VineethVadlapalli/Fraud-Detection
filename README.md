@@ -1,36 +1,30 @@
-# Real-Time Fraud & Anomaly Detection System
+# Agentic Fraud Detection System 🛡️🤖
 
 ## 🚀 Overview
-A high-performance anomaly detection pipeline designed to identify fraudulent financial transactions. The system combines an Unsupervised Ensemble (Isolation Forest, KNN) with a Business Rule Engine to provide real-time, explainable risk assessments.
+A high-performance Fraud detection pipeline designed to identify fraudulent financial transactions. The system combines an Unsupervised Ensemble (Isolation Forest, KNN) with a Business Rule Engine to provide real-time, explainable risk assessments.
 
-## 📊 Performance & Impact
-* **Precision:** ~80% (Supervised XGBoost Baseline)
-* **FPR:** < 1% (Minimal customer friction)
-* **Latency:** < 400ms per transaction
-* **Explainability:** Identifies contributing factors (e.g., "Critical high-value," "Far from home")
+An end-to-end, production-ready fraud detection ecosystem featuring a **Dockerized ML API** and an **Autonomous LangChain Agent**.
+
+## 🚀 System Architecture
+- **Model:** Ensemble (XGBoost/RandomForest, Isolation Forest etc..) trained for financial transaction anomaly detection.
+- **Inference API:** Built with **FastAPI**, containerized via **Docker**, and deployed on **AWS EC2**.
+- **Orchestration:** **LangChain** agent utilizing **Groq (Llama 3.3 70B)** for real-time tool calling and conversational risk assessment.
+
+## 📊 Performance Metrics (Stress Tested)
+- **Reliability:** 100% Success Rate over 100+ concurrent requests.
+- **Latency:** ~746ms average response time on a `t3.micro` instance.
+- **Self-Healing:** Implemented Docker restart policies and optimized Linux swap memory for 24/7 uptime.
 
 ## 🛠️ Tech Stack
-* **Language:** Python 3.10 (Optimized for ARM64)
-* **Modeling:** Scikit-learn, XGBoost, LightGBM
-* **API:** FastAPI, Uvicorn, Pydantic V2
-* **Infrastructure:** Homebrew, PostgreSQL (Ready for Feast Integration)
+- **Languages:** Python (Scikit-learn, Keras, Pandas)
+- **Infrastructure:** AWS (EC2, Security Groups), Docker
+- **Agentic AI:** LangChain, Groq API, Tool-Calling Logic
+- **Database/Tools:** SQL, Tableau (for visualization)
 
-## Quick Start
+## 💡 Key Features
+- **Context-Aware Safety:** The Agent maintains chat history to identify users and transaction context before invoking the fraud model.
+- **Autonomous Decisioning:** The LLM decides when a transaction is "suspicious" enough to require an API-based risk score.
+- **Secure Deployment:** Environment variable isolation and automated secret scanning protection.
 
-\`\`\`bash
-pip install -r requirements.txt
-python scripts/generate_data.py
-python scripts/train_models.py
-python src/api/main.py
-\`\`\`
-
-## API Endpoints
-
-- `GET /health` - Health check
-- `POST /detect` - Detect single transaction
-- `POST /detect/batch` - Batch detection
-- `GET /metrics` - Performance metrics
-
-## Documentation
-
-See `docs/` folder for detailed documentation.
+---
+*Developed by Vineeth Vadlapalli | Data Scientist & AI Specialist*
