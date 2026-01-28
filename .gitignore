@@ -209,3 +209,4 @@ __marimo__/
 # Remove large files to sync in Git
 *.joblib
 echo "data/models/"
+.env
